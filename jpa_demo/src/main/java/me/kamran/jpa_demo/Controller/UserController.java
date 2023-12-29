@@ -8,15 +8,12 @@ import me.kamran.jpa_demo.Entity.User;
 import me.kamran.jpa_demo.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.Future;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 @CrossOrigin
 public class UserController {
     private final UserService userService;
@@ -28,14 +25,14 @@ public class UserController {
 
     @PostMapping("/create")
     @Async
-    public Future<User> Create(UserDto user){
-        return userService.Create(user);
+    public ResponseEntity<String> Create(@RequestBody UserDto user){
+        return  ResponseEntity.ok(userService.Save(user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> Login(LoginDto dto){
-        LogginMessage result = userService.login(dto);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<LoginResponse> Login(@RequestBody LoginDto dto){
+
+        return ResponseEntity.ok(userService.auth(dto));
     }
 
 }
